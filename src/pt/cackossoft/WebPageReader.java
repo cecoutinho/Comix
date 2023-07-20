@@ -145,7 +145,7 @@ public class WebPageReader {
     }
 
     private static String readWebPage(String aUrl) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         try {
             URL myurl = new URL(aUrl);
             HttpsURLConnection con = (HttpsURLConnection) myurl.openConnection();
@@ -155,14 +155,12 @@ public class WebPageReader {
             BufferedReader in = new BufferedReader(isr);
             String inputLine;
 
-            while ((inputLine = in.readLine()) != null) {
-                result += inputLine;
-            }
+            while ((inputLine = in.readLine()) != null) result.append(inputLine);
             in.close();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        return result;
+        return result.toString();
     }
 }

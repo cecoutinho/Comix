@@ -63,7 +63,7 @@ public class Comix {
     private String maxDate;
     private String description;
 
-    public void main(String[] args) {
+    public static void main(String[] args) {
         for (;;) {
             // Get Comic from Combobox
             final String fComicName = (String) JOptionPane.showInputDialog(null, "Comic to be retrieved:", "Comix", JOptionPane.QUESTION_MESSAGE, null, fComicNames, fComicNames[0]);
@@ -79,7 +79,6 @@ public class Comix {
             final SimpleDateFormat fDate2Print = new SimpleDateFormat("EEEE, yyyy-MM-dd");
             Calendar lCalendarStt = Calendar.getInstance();
             Calendar lCalendarEnd = Calendar.getInstance();
-            Calendar lCalendar = Calendar.getInstance();
             Calendar lCalendarMaxDate = Calendar.getInstance();
 
             try {
@@ -92,7 +91,7 @@ public class Comix {
 
             BufferedWriter out;
             try {
-                for (; lCalendarStt.before(lCalendarMaxDate);) {
+                while (lCalendarStt.before(lCalendarMaxDate)) {
                     lCalendarEnd.setTime(lCalendarStt.getTime());     // End date
                     lCalendarEnd.add(Calendar.YEAR, 1);      // Add 1 Year
                     lCalendarEnd.set(Calendar.MONTH, 0);        // 0 = January
