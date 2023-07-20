@@ -63,7 +63,7 @@ public class Comix {
     private String maxDate;
     private String description;
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
         for (;;) {
             // Get Comic from Combobox
             final String fComicName = (String) JOptionPane.showInputDialog(null, "Comic to be retrieved:", "Comix", JOptionPane.QUESTION_MESSAGE, null, fComicNames, fComicNames[0]);
