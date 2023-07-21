@@ -59,20 +59,32 @@ public class Comix {
     private String baseUrl;
     private String comicId;
     private String comicName;
-    private String minDate = "2023/01/01";
+    private String minDate;
     private String maxDate;
     private String description;
 
     public void main(String[] args) {
         for (;;) {
-            // Get Comic from Combobox
+            // Select Comic Name from Combobox
             final String fComicName = (String) JOptionPane.showInputDialog(null, "Comic to be retrieved:", "Comix", JOptionPane.QUESTION_MESSAGE, null, fComicNames, fComicNames[0]);
             if (null == fComicName) {
                 JOptionPane.showMessageDialog(null, "No Comic was selected. Exiting...", "Comix", JOptionPane.INFORMATION_MESSAGE);
                 break;
             }
+
+            // Get Information from Comics Site
             final String fComicUrl = fComicUrls[ArrayUtils.indexOf(fComicNames, fComicName)];
             getPageInfo(fComicUrl);
+
+            // Select Year to retrieve Comics. This needs to be done otherwise we will get all years (too much information) and the Comics site will shut us down (thinking it is an attack)
+            int lComicYear = -1;
+            String lComicYearStr = (String) JOptionPane.showInputDialog(null, "Year to be retrieved:", "Comix", JOptionPane.QUESTION_MESSAGE, null, null, minDate.substring(0,4));
+            if (null == lComicYearStr) {
+                JOptionPane.showMessageDialog(null, "No Comic Year was selected. Exiting...", "Comix", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            } else {
+                lComicYear = Integer.parseInt(lComicYearStr);
+            }
 
             final SimpleDateFormat fStr2Date = new SimpleDateFormat("yyyy/MM/dd");
             final SimpleDateFormat fDate2Str = new SimpleDateFormat("yyyy/MM/dd");
@@ -84,6 +96,10 @@ public class Comix {
             try {
                 lCalendarStt.setTime(fStr2Date.parse(minDate));   // Start date
                 lCalendarMaxDate.setTime(fStr2Date.parse(maxDate)); // Max date
+                if (lComicYear > 0) {
+                    if (lComicYear > lCalendarStt.get(Calendar.YEAR)) lCalendarStt.setTime(fStr2Date.parse(lComicYear + "/01/01"));   // Start date
+                    if (lComicYear < lCalendarMaxDate.get(Calendar.YEAR)) lCalendarMaxDate.setTime(fStr2Date.parse(lComicYear + "/12/31"));   // Max date
+                }
                 lCalendarMaxDate.add(Calendar.DATE, 1); // Need to add 1 day to the final date so that it cycles through the final date inclusive
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -109,6 +125,8 @@ public class Comix {
                         //                    System.out.println(fDate2Print.format(lCalendarStt.getTime()) + ": " + lComicUrls[0] + " + " + lComicUrls[1]);
                         String lComicUrl = null == lComicUrls[1] ? lComicUrls[0] : lComicUrls[1];
                         if (null != lComicUrl) {
+                            out.write("<hr>Comic: " + comicName + " - Date: " + fDate2Print.format(lCalendarStt.getTime()) + "<br><a href=" + lTargetUrl + "><img src=\"" + lComicUrl + "\"></a>");
+                        } else {
                             out.write("<hr>Comic: " + comicName + " - Date: " + fDate2Print.format(lCalendarStt.getTime()) + "<br><a href=" + lTargetUrl + "><img src=\"" + lComicUrl + "\"></a>");
                         }
                     }
